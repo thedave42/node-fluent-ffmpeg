@@ -1,8 +1,13 @@
-# Fluent ffmpeg-API for node.js [![Build Status](https://secure.travis-ci.org/fluent-ffmpeg/node-fluent-ffmpeg.svg?branch=master)](http://travis-ci.org/fluent-ffmpeg/node-fluent-ffmpeg)
+# Fluent ffmpeg-API for node.js
+
+[![Coverage Status](https://coveralls.io/repos/github/fluent-ffmpeg/node-fluent-ffmpeg/badge.svg?branch=master)](https://coveralls.io/github/fluent-ffmpeg/node-fluent-ffmpeg?branch=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent-ffmpeg%2Fnode-fluent-ffmpeg.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent-ffmpeg%2Fnode-fluent-ffmpeg?ref=badge_shield)
 
-> **Fluent-ffmpeg is looking for new maintainers**
-> More details [on the wiki](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/wiki/Looking-for-a-new-maintainer)
+## Fluent-ffmpeg is now deprecated
+
+This library is **no longer maintained** and no longer works properly with recent ffmpeg versions. Use it as your own risk, this repository is readonly and does not accept issues or PRs.
+
+## About
 
 This library abstracts the complex command-line usage of ffmpeg into a fluent, easy to use node.js module. In order to be able to use this module, make sure you have [ffmpeg](http://www.ffmpeg.org) installed on your system (including all necessary encoding libraries like libmp3lame or libx264).
 
@@ -1456,12 +1461,6 @@ To run unit tests, first make sure you installed npm dependencies (run `npm inst
 
 ```sh
 $ make test
-```
-
-If you want to re-generate the test coverage report (filed under test/coverage.html), run
-
-```sh
-$ make test-cov
 ```
 
 Make sure your ffmpeg installation is up-to-date to prevent strange assertion errors because of missing codecs/bugfixes.
