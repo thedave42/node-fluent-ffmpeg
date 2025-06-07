@@ -21,7 +21,7 @@ jobs:
         shell: pwsh # Explicitly use PowerShell, though it's default on Windows
         run: |
           curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
-          Add-Content -Path $env:GITHUB_PATH -Value "${{ github.workspace }}"
+          Add-Content -Path $env:GITHUB_ACTIONS_PATH -Value "${{ github.workspace }}"
       - name: Setup FFmpeg action
         uses: AnimMouse/setup-ffmpeg@v1
       - name: Setup node
