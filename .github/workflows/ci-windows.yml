@@ -20,7 +20,7 @@ jobs:
       - name: Install flvtool2 (Windows)
         run: |
           curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
-          echo "${{ github.workspace }}\\flvtool2.exe" >> $GITHUB_PATH
+          echo "${{ github.workspace }}" >> $GITHUB_PATH
       - name: Setup FFmpeg action
         uses: AnimMouse/setup-ffmpeg@v1
       - name: Setup node
