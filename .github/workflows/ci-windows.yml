@@ -18,9 +18,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install flvtool2 (Windows)
+        shell: pwsh # Explicitly use PowerShell, though it's default on Windows
         run: |
           curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
-          echo "${{ github.workspace }}" >> $GITHUB_PATH
+          Add-Content -Path $env:GITHUB_PATH -Value "${{ github.workspace }}"
       - name: Setup FFmpeg action
         uses: AnimMouse/setup-ffmpeg@v1
       - name: Setup node
