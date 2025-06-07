@@ -24,6 +24,8 @@ jobs:
           Add-Content -Path $env:GITHUB_PATH -Value "${{ github.workspace }}"
       - name: Setup FFmpeg action
         uses: AnimMouse/setup-ffmpeg@v1
+        with:
+          version: master
       - name: Setup node
         uses: actions/setup-node@v3
         with:
