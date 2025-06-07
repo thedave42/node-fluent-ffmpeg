@@ -24,7 +24,7 @@ jobs:
           curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
           Add-Content -Path $env:GITHUB_PATH -Value "${{ github.workspace }}"
       - name: Setup FFmpeg action
-        uses: thedave42/setup-ffmpeg@master
+        uses: thedave42/setup-ffmpeg@main
         with:
           version: master
       - name: Setup node

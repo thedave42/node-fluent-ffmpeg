@@ -21,7 +21,7 @@ jobs:
       - name: Install flvtool2 (Linux/macOS)
         run: sudo gem install flvtool2
       - name: Setup FFmpeg action
-        uses: thedave42/setup-ffmpeg@master
+        uses: thedave42/setup-ffmpeg@main
         with:
           version: master        
       - name: Setup node
