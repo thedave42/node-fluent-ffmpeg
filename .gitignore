@@ -6,3 +6,5 @@ node_modules
 *.iml
 coverage
 **/.env
+test-results.xml
+*.txt

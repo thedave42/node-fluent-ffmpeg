@@ -520,23 +520,30 @@ describe('Processor', function() {
               assert.ok(expectedSignalMessage, 
                 'Error message did not indicate SIGINT-like termination on Windows: ' + err.message);
             } else {
-              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint');
+              // On POSIX, check for "signal sigint" in the message OR an exit code 255, 
+              // as ffmpeg might exit with 255 when interrupted by SIGINT.
+              // Also, the stderr might contain "Exiting normally, received signal 2."
+              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint') || 
+                                      err.message.includes('ffmpeg exited with code 255') ||
+                                      (stderr && stderr.includes('Exiting normally, received signal 2'));
               assert.ok(expectedSignalMessage, 
-                'Error message did not indicate SIGINT-like termination on POSIX: ' + err.message);
+                'Error message did not indicate SIGINT-like termination on POSIX: ' + err.message + (stderr ? ' STDERR: ' + stderr : ''));
             }
 
-            // Manual process removal logic from previous successful timeout test
-            if (ffmpegJob.ffmpegProc && self.processes.includes(ffmpegJob.ffmpegProc)) {
-              const index = self.processes.indexOf(ffmpegJob.ffmpegProc);
-              self.processes.splice(index, 1);
-              console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): Manually removed process PID ' + (ffmpegJob.ffmpegProc.pid || 'N/A') + ' from tracking array in on(error).');
-            } else if (ffmpegJob.ffmpegProc) {
-              console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): Process PID ' + (ffmpegJob.ffmpegProc.pid || 'N/A') + ' was not found in tracking array for manual removal in on(error).');
+            // Manual process removal logic
+            const processInstance = ffmpegJob.ffmpegProc;
+            if (processInstance) {
+              const index = self.processes.indexOf(processInstance);
+              if (index > -1) {
+                self.processes.splice(index, 1);
+                console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): Manually removed process PID ' + (processInstance.pid || 'N/A') + ' from tracking array in on(error).');
+              } else {
+                console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): Process PID ' + (processInstance.pid || 'N/A') + ' was not found in tracking array for manual removal in on(error).');
+              }
             } else {
               console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): ffmpegJob.ffmpegProc was null in on(error), cannot manually remove from tracking.');
             }
             
-            // If the error is the expected one (due to SIGINT), call done without an error.
             if (expectedSignalMessage) {
               callDoneOnce(); 
             } else {
