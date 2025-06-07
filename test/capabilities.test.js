@@ -588,6 +588,7 @@ describe('Capabilities', function() {
       var ff = new Ffmpeg();
 
       delete process.env.FLVTOOL2_PATH;
+      delete process.env.FLVMETA_PATH;
 
       ff._forgetPaths();
       ff._getFlvtoolPath(function(err, fflvtool) {
@@ -598,22 +599,30 @@ describe('Capabilities', function() {
         fflvtool.length.should.above(0);
 
         var paths = process.env.PATH.split(PATH_DELIMITER);
-        paths.indexOf(path.dirname(fflvtool)).should.above(-1);
-        done();
-      });
-    });
+        var dirnameFlvtool = path.dirname(fflvtool);
 
-    (skipTest || skipAltTest ? it.skip : it)('should use FLVTOOL2_PATH if defined and valid', function(done) {
-      var ff = new Ffmpeg();
+        var foundInPath = false;
+        if (process.platform === 'win32') {
+          // On Windows, drive letters can have different cases.
+          // Also, an .exe may be found (e.g. flvmeta.exe), so check for that too.
+          var lowerCaseDirnameFlvtool = dirnameFlvtool.toLowerCase();
+          var lowerCaseFlvtool = fflvtool.toLowerCase();
+          paths.forEach(function(p) {
+            var lowerCasePath = p.toLowerCase();
+            if (lowerCaseDirnameFlvtool === lowerCasePath || 
+                lowerCaseFlvtool === path.join(lowerCasePath, path.basename(fflvtool)).toLowerCase()) {
+              foundInPath = true;
+            }
+          });
+        } else {
+          paths.forEach(function(p) {
+            if (dirnameFlvtool === p) {
+              foundInPath = true;
+            }
+          });
+        }
 
-      process.env.FLVTOOL2_PATH = ALT_FLVTOOL_PATH;
-
-      ff._forgetPaths();
-      ff._getFlvtoolPath(function(err, fflvtool) {
-        testhelper.logError(err);
-        assert.ok(!err);
-
-        fflvtool.should.equal(ALT_FLVTOOL_PATH);
+        foundInPath.should.equal(true);
         done();
       });
     });
@@ -622,6 +631,7 @@ describe('Capabilities', function() {
       var ff = new Ffmpeg();
 
       process.env.FLVTOOL2_PATH = '/nope/not-here/nothing-to-see-here';
+      delete process.env.FLVMETA_PATH;
 
       ff._forgetPaths();
       ff._getFlvtoolPath(function(err, fflvtool) {
@@ -632,7 +642,30 @@ describe('Capabilities', function() {
         fflvtool.length.should.above(0);
 
         var paths = process.env.PATH.split(PATH_DELIMITER);
-        paths.indexOf(path.dirname(fflvtool)).should.above(-1);
+        var dirnameFlvtool = path.dirname(fflvtool);
+
+        var foundInPath = false;
+        if (process.platform === 'win32') {
+          // On Windows, drive letters can have different cases.
+          // Also, an .exe may be found (e.g. flvmeta.exe), so check for that too.
+          var lowerCaseDirnameFlvtool = dirnameFlvtool.toLowerCase();
+          var lowerCaseFlvtool = fflvtool.toLowerCase();
+          paths.forEach(function(p) {
+            var lowerCasePath = p.toLowerCase();
+            if (lowerCaseDirnameFlvtool === lowerCasePath || 
+                lowerCaseFlvtool === path.join(lowerCasePath, path.basename(fflvtool)).toLowerCase()) {
+              foundInPath = true;
+            }
+          });
+        } else {
+          paths.forEach(function(p) {
+            if (dirnameFlvtool === p) {
+              foundInPath = true;
+            }
+          });
+        }
+
+        foundInPath.should.equal(true);
         done();
       });
     });

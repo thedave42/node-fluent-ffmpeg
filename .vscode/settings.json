@@ -1,0 +1,7 @@
+{
+  "mochaExplorer.env": {
+    "NODE_ENV": "test"
+  },
+  "mochaExplorer.require": "should",
+  "mochaExplorer.files": "test/**/*.test.js"
+}

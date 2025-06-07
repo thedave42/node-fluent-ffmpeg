@@ -1,0 +1,7 @@
+{
+  "require": "should",
+  "reporter": "spec",
+  "timeout": 5000,
+  "env": { "NODE_ENV": "test" },
+  "spec": "test/**/*.test.js"
+}

@@ -3,9 +3,11 @@
 [![Coverage Status](https://coveralls.io/repos/github/fluent-ffmpeg/node-fluent-ffmpeg/badge.svg?branch=master)](https://coveralls.io/github/fluent-ffmpeg/node-fluent-ffmpeg?branch=master)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Ffluent-ffmpeg%2Fnode-fluent-ffmpeg.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Ffluent-ffmpeg%2Fnode-fluent-ffmpeg?ref=badge_shield)
 
-## Fluent-ffmpeg is now deprecated
+## Fluent-ffmpeg updated to work with latest ffmpeg
 
-This library is **no longer maintained** and no longer works properly with recent ffmpeg versions. Use it as your own risk, this repository is readonly and does not accept issues or PRs.
+The [original library](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg) is **no longer maintained** and no longer works properly with recent ffmpeg versions. 
+
+The version was forked from the last update and updated to work with the latest ffmpeg release.
 
 ## About
 
@@ -24,7 +26,7 @@ $ npm install fluent-ffmpeg
 
 Or as a submodule:
 ```sh
-$ git submodule add git://github.com/schaermu/node-fluent-ffmpeg.git vendor/fluent-ffmpeg
+$ git submodule add git://github.com/thedave42/node-fluent-ffmpeg.git vendor/fluent-ffmpeg
 ```
 
 
