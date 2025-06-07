@@ -1,0 +1,58 @@
+name: CI Testing - Windows
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    name: Run tests on ${{ matrix.os }} Node ${{ matrix.node }} # Updated job name for clarity
+    strategy:
+      matrix:
+        node: [22]
+        os: [windows-latest]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install flvtool2 (Windows)
+        run: |
+          curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
+          echo "${{ github.workspace }}\\flvtool2.exe" >> $GITHUB_PATH
+      - name: Setup FFmpeg action
+        uses: AnimMouse/setup-ffmpeg@v1
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Install dependencies
+        run: npm i
+      - name: Run tests
+        run: npm test
+      - name: Upload test results artifact # Changed from 'Upload test results to GitHub Artifacts'
+        if: always() # Ensure artifact is uploaded even if tests fail or job is cancelled
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.node }} # Unique artifact name per job
+          path: test-results.xml
+          retention-days: 1 # Optional: keep artifacts for a short period
+
+  publish-all-results:
+    name: Publish all test results
+    runs-on: ubuntu-latest
+    needs: test # Depends on the 'test' job (all matrix instances)
+    if: always() # Run this job even if test jobs fail, to publish what we have
+    steps:
+      - name: Download all test results artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-test-results # All artifacts will be downloaded here
+                                 # Each artifact in its own subdirectory, e.g., all-test-results/test-results-ubuntu-latest-node-22/test-results.xml
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: all-test-results/**/test-results.xml # Glob pattern to find all test-results.xml files
+
