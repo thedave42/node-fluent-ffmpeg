@@ -1,10 +1,14 @@
 name: CI Testing - Windows
 on:
-  workflow_dispatch:
-  # pull_request:
-  # push:
-  #   branches:
-  #     - master
+  pull_request:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Run tests on ${{ matrix.os }} Node ${{ matrix.node }} # Updated job name for clarity
