@@ -494,7 +494,16 @@ describe('Processor', function() {
                   }
                 } else {
                   // Neither on('error') nor on('end') was called before exit.
-                  callDoneOnce(new Error('Process exited (code ' + code + ', signal ' + signal + ') after SIGINT, but neither on(error) nor on(end) was emitted by the library.'));
+                  // On Linux, SIGINT can result in exit code 255 and signal null,
+                  // while stderr indicates a normal exit due to signal 2.
+                  // The 'error' event will be emitted by the library in this case.
+                  // We should wait for the 'error' event to be processed.
+                  if (require('os').platform() !== 'win32' && code === 255 && signal === null) {
+                    console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): Process exited on Linux with code 255/null after SIGINT. Waiting for on(error) to be called.');
+                    // Do not call done() here; let the on('error') handler do it.
+                  } else {
+                    callDoneOnce(new Error('Process exited (code ' + code + ', signal ' + signal + ') after SIGINT, but neither on(error) nor on(end) was emitted by the library.'));
+                  }
                 }
               });
             } else {
@@ -524,9 +533,9 @@ describe('Processor', function() {
               // On POSIX, check for "signal sigint" in the message OR an exit code 255, 
               // as ffmpeg might exit with 255 when interrupted by SIGINT.
               // Also, the stderr might contain "Exiting normally, received signal 2."
-              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint') || 
-                                      err.message.includes('ffmpeg exited with code 255') ||
-                                      (stderr && stderr.includes('Exiting normally, received signal 2'));
+              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint') ||
+                                      (err.message.includes('ffmpeg exited with code 255') && (stderr && stderr.includes('Exiting normally, received signal 2'))) ||
+                                      (err.message.includes('ffmpeg exited with code 255') && !stderr); // Allow if stderr is not available but code is 255
               assert.ok(expectedSignalMessage, 
                 'Error message did not indicate SIGINT-like termination on POSIX: ' + err.message + (stderr ? ' STDERR: ' + stderr : ''));
             }
