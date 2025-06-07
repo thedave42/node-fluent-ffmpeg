@@ -510,11 +510,18 @@ describe('Processor', function() {
             assert.ok(startCalled, 'on(error) called before on(start) in custom signal (SIGINT) test');
             
             var platform = require('os').platform();
+            var expectedSignalMessage = false;
             if (platform.match(/win(32|64)/)) {
-              assert.ok(err.message.includes('exited with code') || err.message.toLowerCase().includes('signal sigint') || err.message.includes('killed') || err.message.includes('terminated'),
+              // On Windows, SIGINT might be reported as a generic "killed" or specific exit code.
+              // The core issue is that the library emits an error "ffmpeg was killed with signal SIGINT".
+              // We need to ensure this specific message, or a close variant, is what we expect.
+              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint') || 
+                                      err.message.includes('exited with code'); // Common on Windows for forced termination
+              assert.ok(expectedSignalMessage, 
                 'Error message did not indicate SIGINT-like termination on Windows: ' + err.message);
             } else {
-              assert.ok(err.message.toLowerCase().includes('signal sigint') || err.message.includes('exited with code') || err.message.includes('killed') || err.message.includes('terminated'),
+              expectedSignalMessage = err.message.toLowerCase().includes('signal sigint');
+              assert.ok(expectedSignalMessage, 
                 'Error message did not indicate SIGINT-like termination on POSIX: ' + err.message);
             }
 
@@ -529,8 +536,12 @@ describe('Processor', function() {
               console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): ffmpegJob.ffmpegProc was null in on(error), cannot manually remove from tracking.');
             }
             
-            // ffmpegProc.on('exit') should call callDoneOnce() // This comment is now incorrect. on('error') calls it.
-            callDoneOnce(err); // Ensure on('error') calls done with the received error.
+            // If the error is the expected one (due to SIGINT), call done without an error.
+            if (expectedSignalMessage) {
+              callDoneOnce(); 
+            } else {
+              callDoneOnce(err); // Unexpected error
+            }
           })
           .on('end', function(stdout, stderr) {
             console.log('[fluent-ffmpeg test debug] Custom Signal Test (SIGINT): on(end) called.');
