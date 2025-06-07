@@ -1,9 +1,10 @@
 name: CI Testing - Windows
 on:
-  pull_request:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+  # pull_request:
+  # push:
+  #   branches:
+  #     - master
 jobs:
   test:
     name: Run tests on ${{ matrix.os }} Node ${{ matrix.node }} # Updated job name for clarity
@@ -23,7 +24,7 @@ jobs:
           curl -L -o flvtool2.exe https://github.com/unnu/flvtool2/raw/master/flvtool2.exe
           Add-Content -Path $env:GITHUB_PATH -Value "${{ github.workspace }}"
       - name: Setup FFmpeg action
-        uses: AnimMouse/setup-ffmpeg@v1
+        uses: thedave42/setup-ffmpeg@master
         with:
           version: master
       - name: Setup node
