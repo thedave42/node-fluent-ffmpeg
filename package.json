@@ -21,14 +21,14 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "jsdoc": "^4.0.0",
-    "mocha": "^10.0.0",
+    "mocha": "^11.5.0",
     "mocha-junit-reporter": "^2.2.1",
-    "nyc": "^15.1.0",
+    "nyc": "^17.1.0",
     "should": "^13.0.0"
   },
   "dependencies": {
-    "async": "^0.2.9",
-    "which": "^1.1.1"
+    "async": "^3.2.6",
+    "which": "^5.0.0"
   },
   "engines": {
     "node": ">=18"

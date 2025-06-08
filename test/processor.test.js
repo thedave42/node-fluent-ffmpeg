@@ -425,16 +425,15 @@ describe('Processor', function() {
     });
 
     it('should send the process custom signals with .kill(signal)', function(done) {
-      this.timeout(60000);
+      this.timeout(60000); // Keep this test-specific timeout high
 
       var testFile = path.join(__dirname, 'assets', 'testProcessKillCustom.avi');
       // Do not add to this.files, as SIGINT should prevent creation / lead to error
 
-      // Using a 2s library timeout. If SIGINT (sent at 0.5s) works,
-      // it should terminate the process before this library timeout is reached.
-      // If SIGINT fails, this timeout would be a fallback, and the error message would be "timeout",
-      // which would then fail the assertion in on('error').
-      var ffmpegJob = this.getCommand({ source: this.testfilebig, logger: testhelper.logger, timeout: 15 }); // Increased command timeout to 15s
+      // Using a library timeout that is shorter than the test's timeout,
+      // but long enough for the kill signal to be processed.
+      var commandTimeout = 2000; // 2 seconds, allowing time for SIGINT to work before this triggers
+      var ffmpegJob = this.getCommand({ source: this.testfilebig, logger: testhelper.logger, timeout: commandTimeout });
       var self = this;
 
       var startCalled = false;
