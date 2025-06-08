@@ -38,6 +38,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml",
     "test:colors": "cross-env NODE_ENV=test mocha --colors",
+    "coverage": "nyc npm run test",
     "publish:patch": "npm version patch -m \"version bump\" && npm publish",
     "doc": "jsdoc --configure tools/jsdoc-conf.json"
   }
