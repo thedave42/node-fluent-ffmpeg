@@ -3,3 +3,10 @@
 test/
 examples/
 **/.env
+tools/
+doc/
+.github/
+.vscode/
+.npmrc
+.mocharc.json
+*.txt
