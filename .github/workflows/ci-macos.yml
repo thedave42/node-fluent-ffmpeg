@@ -53,7 +53,7 @@ jobs:
     if: always() # Run this job even if test jobs fail, to publish what we have
     steps:
       - name: Download all test results artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: all-test-results # All artifacts will be downloaded here
                                  # Each artifact in its own subdirectory, e.g., all-test-results/test-results-ubuntu-latest-node-22/test-results.xml
