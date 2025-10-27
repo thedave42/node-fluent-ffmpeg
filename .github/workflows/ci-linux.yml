@@ -40,7 +40,7 @@ jobs:
         run: npm test
       - name: Upload test results artifact # Changed from 'Upload test results to GitHub Artifacts'
         if: always() # Ensure artifact is uploaded even if tests fail or job is cancelled
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-results-${{ matrix.os }}-${{ matrix.node }} # Unique artifact name per job
           path: test-results.xml
