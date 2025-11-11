@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "async": "^3.2.6",
-    "which": "^5.0.0"
+    "which": "^6.0.0"
   },
   "engines": {
     "node": ">=18"
