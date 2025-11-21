@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install flvtool2 (Windows)
         shell: pwsh # Explicitly use PowerShell, though it's default on Windows
         run: |
